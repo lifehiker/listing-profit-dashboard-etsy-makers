@@ -149,7 +149,7 @@ This audit maps each major PRD requirement to the concrete files that implement 
   `.dockerignore`
 - Deployment fix applied:
   `Dockerfile`
-  Replaced the stale Prisma CLI startup command with a Prisma 7 compatible `db push --schema ./prisma/schema.prisma --url "$DATABASE_URL"` call so the runtime image no longer fails on a removed flag or on missing `prisma.config.ts`.
+  Replaced the stale Prisma CLI startup command with a Prisma 7 compatible `db push --schema ./prisma/schema.prisma --url "$DATABASE_URL"` call, removed the invalid `--skip-generate` flag that would crash the container before Next.js started, removed the unconditional `COPY /app/public` step because this repo has no `public/` directory, aligned the Docker env names with `NEXT_PUBLIC_SITE_URL` / `NEXTAUTH_URL`, and switched the auth-secret fallback from a baked static image value to a runtime-generated value.
 - Environment variable and setup documentation:
   `.env.example`
   `README.md`
@@ -169,7 +169,7 @@ This audit maps each major PRD requirement to the concrete files that implement 
   credentials login with seeded demo user
   authenticated dashboard, listings, templates, quotes, import, billing, printable quote
   billing mock upgrade path
-- `docker build .` attempted but blocked by local Docker socket permissions
+- `docker build .` attempted but blocked by local Docker socket permissions (`permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`)
 
 ## Intentionally deferred external-credential items
 
@@ -177,5 +177,7 @@ This audit maps each major PRD requirement to the concrete files that implement 
 - Live Stripe checkout/webhooks require Stripe keys and price IDs.
 - Live Resend delivery requires Resend credentials and sender configuration.
 - Live PostHog capture requires a project key.
+- Persistent production auth sessions require `AUTH_SECRET`.
+- Multi-instance deployments should provide `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY`.
 
-The app still runs without those credentials because it uses local SQLite persistence, guarded provider initialization, mock Stripe upgrade handling, and no-op email/analytics fallbacks.
+The app still runs without those credentials because it uses local SQLite persistence, guarded provider initialization, mock Stripe upgrade handling, no-op email/analytics fallbacks, and a runtime-generated auth secret fallback when `AUTH_SECRET` is omitted.

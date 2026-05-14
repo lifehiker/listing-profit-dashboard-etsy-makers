@@ -19,5 +19,8 @@ Optional production credentials:
 5. Site URL
    Set `NEXT_PUBLIC_SITE_URL` and `NEXTAUTH_URL` to the deployed domain in production.
 
-6. Optional auth secret override
-   Set `AUTH_SECRET` in production if you want to replace the default container secret baked into the Docker image.
+6. Auth secret
+   Set `AUTH_SECRET` in production to a long random secret. The container can generate a temporary fallback so the app boots without it, but sessions will be invalidated after container restarts if you do not provide a persistent value.
+
+7. Optional multi-instance server action key
+   If you ever run more than one app instance behind a load balancer, set `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` to a shared base64-encoded key so server actions remain valid across instances.

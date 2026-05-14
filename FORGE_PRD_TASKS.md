@@ -2,7 +2,7 @@
 
 Status key: `[x] complete` `[~] blocked outside app` `[ ] remaining`
 
-Final pass updated on 2026-05-14 after re-reading `PRD.md` and `BUILD_INSTRUCTIONS.md`, auditing the existing implementation, fixing the production container startup path, rerunning the production build, linting, smoke-testing the dev server, and booting the standalone server locally.
+Final pass updated on 2026-05-14 after re-reading `PRD.md` and `BUILD_INSTRUCTIONS.md`, auditing the existing implementation, fixing the production container startup path, rerunning the production build, linting, smoke-testing the dev server, verifying authenticated and unauthenticated HTTP flows, and booting the standalone server locally.
 
 ## Foundation
 - [x] Read `PRD.md` end-to-end
@@ -91,7 +91,7 @@ Final pass updated on 2026-05-14 after re-reading `PRD.md` and `BUILD_INSTRUCTIO
 
 ## Deployment / Ops
 - [x] Production-ready Dockerfile
-  Completed: fixed runtime bootstrap to use Prisma 7 compatible `db push` syntax and explicit `--url` so the container no longer depends on a missing runtime Prisma config file.
+  Completed: fixed the runtime bootstrap to remove the invalid Prisma 7 `--skip-generate` flag, use `db push --schema ./prisma/schema.prisma --url "$DATABASE_URL"`, align runtime site URL env vars with the app, generate an auth secret fallback only at runtime instead of baking a static secret into the image, and remove the stale `COPY /app/public` step because this repo has no `public/` directory.
 - [x] Standalone Next.js output config
 - [x] Environment variable documentation
 - [x] `HUMAN_INPUT_NEEDED.md` for optional external credentials
@@ -106,6 +106,7 @@ Final pass updated on 2026-05-14 after re-reading `PRD.md` and `BUILD_INSTRUCTIO
 - [x] Smoke test export endpoints
 - [x] Smoke test billing fallback
 - [x] Smoke test standalone production server boot
+- [x] Verify deployment bug from logs and fix underlying container startup issue
 - [~] Run `docker build .`
-  Blocked outside app: local Docker socket permissions deny access to the daemon.
+  Blocked outside app: local Docker socket permissions deny access to the daemon (`permission denied while trying to connect to the docker API at unix:///var/run/docker.sock`).
 - [x] Create `FORGE_COMPLETION_AUDIT.md`
