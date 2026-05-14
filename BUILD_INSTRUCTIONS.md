@@ -5,7 +5,7 @@
 - **App Name:** listing-profit-dashboard-etsy-makers
 - **Repository:** listing-profit-dashboard-etsy-makers
 - **Tech Stack:** Next.js 15 (App Router) + TypeScript + Tailwind + shadcn/ui
-- **Description:** A profitability and quoting app for Etsy sellers that calculates per-listing margin using materials, production time, fees, packaging, shipping, and SKU-level costs. It helps makers understand true profitability, price custom work, and decide which listings to scale or retire.
+- **Description:** listing-profit-dashboard-etsy-makers
 
 ---
 

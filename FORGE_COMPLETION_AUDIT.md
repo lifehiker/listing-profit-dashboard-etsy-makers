@@ -16,6 +16,8 @@ This audit maps each major PRD requirement to the concrete files that implement 
   `prisma.config.ts`
   `src/lib/db.ts`
   `src/lib/database-url.ts`
+- Clean-build Prisma generation and package scripts:
+  `package.json`
 
 ## Data model
 
@@ -145,22 +147,29 @@ This audit maps each major PRD requirement to the concrete files that implement 
 - Docker image:
   `Dockerfile`
   `.dockerignore`
+- Deployment fix applied:
+  `Dockerfile`
+  Replaced the stale Prisma CLI startup command with a Prisma 7 compatible `db push --schema ./prisma/schema.prisma --url "$DATABASE_URL"` call so the runtime image no longer fails on a removed flag or on missing `prisma.config.ts`.
+- Environment variable and setup documentation:
+  `.env.example`
+  `README.md`
 
 ## Verification completed
 
-- `npm run db:generate`
-- `npm run db:migrate -- --name init`
+- `./node_modules/.bin/prisma db push --schema ./prisma/schema.prisma --url 'file:./prisma/dev.db'`
 - `npm run db:seed`
 - `npm run lint`
 - `npm run build`
 - `npm run dev`
+- production-style standalone boot:
+  `PORT=3001 ... node .next/standalone/server.js`
 - HTTP smoke tests:
   public homepage and SEO route
   protected redirect to sign-in
   credentials login with seeded demo user
   authenticated dashboard, listings, templates, quotes, import, billing, printable quote
   billing mock upgrade path
-  listings and quotes CSV export after upgrade
+- `docker build .` attempted but blocked by local Docker socket permissions
 
 ## Intentionally deferred external-credential items
 

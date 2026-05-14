@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Listing Profit Dashboard for Etsy Makers
 
-## Getting Started
+A Next.js SaaS app for Etsy 3D print, laser-cut, and handmade sellers to calculate listing profitability, save reusable cost templates, build custom quotes, and track margin across their catalog.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 App Router
+- TypeScript
+- Tailwind CSS
+- Prisma 7 + SQLite
+- NextAuth credentials auth with optional Google OAuth
+- Stripe, Resend, and PostHog with guarded fallbacks
+
+## Local Setup
+
+1. Install dependencies:
+
+```bash
+npm ci
+```
+
+2. Copy `.env.example` to `.env` if needed and adjust values. The app works locally with SQLite and no external service credentials.
+
+3. Initialize the database and seed demo data:
+
+```bash
+npx prisma db push
+npm run db:seed
+```
+
+4. Start the dev server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The seeded demo login is `demo@example.com` / `demo1234`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+The build script generates the Prisma client before running `next build`, so a clean checkout can build without a separate manual step.
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `next.config.ts` uses `output: "standalone"` for container deployment.
+- `Dockerfile` uses `node:20-slim`, generates Prisma client in the builder stage, and initializes the SQLite schema on container start with a Prisma 7 compatible `db push` command.
+- External services are optional. Without credentials, billing uses a safe local fallback and email/analytics calls no-op cleanly.

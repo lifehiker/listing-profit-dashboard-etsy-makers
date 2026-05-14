@@ -18,3 +18,6 @@ Optional production credentials:
 
 5. Site URL
    Set `NEXT_PUBLIC_SITE_URL` and `NEXTAUTH_URL` to the deployed domain in production.
+
+6. Optional auth secret override
+   Set `AUTH_SECRET` in production if you want to replace the default container secret baked into the Docker image.
